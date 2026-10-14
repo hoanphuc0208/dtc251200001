@@ -1,0 +1,38 @@
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+schema_config:
+  configs:
+    - from: 2024-01-01
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+# Cấu hình giới hạn kích thước nhận log (Tránh bị ngắt kết nối khi log quá lớn)
+limits_config:
+  reject_old_samples: true
+  reject_old_samples_max_age: 168h # Giới hạn nhận log trong vòng 7 ngày gần nhất
+  max_line_size: 256KB
+  ingestion_rate_mb: 10
+  ingestion_burst_size_mb: 20
+
+# Cấu hình Ruler (Tránh lỗi log warning nếu không dùng cảnh báo)
+ruler:
+  alertmanager_url: http://localhost:9093

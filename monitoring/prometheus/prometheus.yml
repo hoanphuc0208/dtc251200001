@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s      # Tần suất thu thập metrics mặc định (15 giây/lần)
+  evaluation_interval: 15s  # Tần suất đánh giá các quy tắc cảnh báo (Alert Rules)
+
+scrape_configs:
+  # 1. Thu thập metrics từ Web App PetCare (Node.js)
+  - job_name: 'petcare-app'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['app:3000']
+        labels:
+          environment: 'production'
+          service: 'petcare-web'
+
+  # 2. Thu thập metrics từ Web Server Nginx
+  - job_name: 'nginx'
+    scrape_interval: 10s
+    static_configs:
+      - targets: ['nginx:80']
+        labels:
+          environment: 'production'
+          service: 'reverse-proxy'
+
+  # 3. Tự giám sát chính hệ thống Prometheus
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
