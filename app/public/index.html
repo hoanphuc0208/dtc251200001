@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PetCare Studio | Quản lý Lịch Hẹn & Cửa Hàng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================
+       GLOBAL STYLES & THEME VARIABLES
+       ========================================== */
+    :root {
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-sidebar: #0f172a;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius: 12px;
+    }
+
+    body.dark-mode {
+      --bg-body: #090d16;
+      --bg-card: #1e293b;
+      --bg-sidebar: #0b0f19;
+      --border-color: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.2s, border-color 0.2s; }
+    body { background-color: var(--bg-body); color: var(--text-main); min-height: 100vh; }
+
+    /* LAYOUT APPSHELL */
+    .app-shell { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 260px;
+      background-color: var(--bg-sidebar);
+      color: #f8fafc;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 28px;
+    }
+    .brand-mark { background: linear-gradient(135deg, #6366f1, #a855f7); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+    .nav-group-label { font-size: 11px; font-weight: 700; color: #64748b; letter-spacing: 0.05em; margin: 16px 12px 8px; text-transform: uppercase; }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      margin-bottom: 4px;
+    }
+    .nav-btn:hover { background: rgba(255,255,255,0.05); color: #f8fafc; }
+    .nav-btn.active { background: var(--primary); color: #fff; }
+    .nav-btn .badge { margin-left: auto; background: rgba(255,255,255,0.2); font-size: 11px; padding: 2px 8px; border-radius: 12px; }
+
+    /* MAIN CONTENT AREA */
+    .main-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* TOPBAR BREADCRUMB & TAB SWITCHER */
+    .topbar {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .breadcrumb-tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg-body);
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .tab-link {
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.15s;
+      user-select: none;
+    }
+    .tab-link:hover { color: var(--primary); }
+    .tab-link.active {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 6px;
+      text-decoration-thickness: 2px;
+    }
+    .tab-divider { color: var(--border-color); font-weight: 400; }
+
+    .top-actions { display: flex; align-items: center; gap: 14px; }
+    .icon-btn {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CONTENT BODY CONTAINER */
+    .content-body { padding: 28px; flex: 1; }
+
+    /* VIEW SECTIONS */
+    .view-section { display: none; }
+    .view-section.active { display: block; animation: fadeIn 0.25s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* BANNER */
+    .welcome-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .welcome-banner h1 { font-size: 24px; font-weight: 800; }
+    .welcome-banner p { color: var(--text-muted); font-size: 14px; margin-top: 4px; }
+
+    /* FORM STYLE FOR CREATING NEW DATA */
+    .add-form-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+    .add-form-panel h3 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      align-items: flex-end;
+    }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full-width { grid-column: 1 / -1; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+    .form-input, .form-select {
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus { border-color: var(--primary); }
+    .btn-submit {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      height: 42px;
+    }
+    .btn-submit:hover { background: var(--primary-hover); }
+
+    /* STORE PAGE SPECIFIC STYLES */
+    .store-filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+    .product-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .product-image {
+      height: 160px;
+      background: var(--bg-body);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+      margin-bottom: 12px;
+    }
+    .product-tag {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      background: rgba(15, 23, 42, 0.75);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      backdrop-filter: blur(4px);
+    }
+    .product-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .product-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.4; flex: 1; }
+    .product-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .product-price { font-size: 16px; font-weight: 800; color: var(--primary); }
+    .add-cart-btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .add-cart-btn:hover { background: var(--primary-hover); }
+
+    /* TABLES & PANELS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .stat-value { font-size: 24px; font-weight: 800; margin: 8px 0; }
+    .stat-sub { font-size: 12px; color: var(--success); font-weight: 700; }
+
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+    .data-table th, .data-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .data-table th { color: var(--text-muted); font-weight: 600; background: var(--bg-body); }
+
+    .badge-sub {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--primary);
+    }
+
+    /* SLIDE-OVER CART SIDEBAR */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .cart-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 380px;
+      height: 100%;
+      background: var(--bg-card);
+      box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+      z-index: 100;
+      transform: translateX(100%);
+      transition: transform 0.25s ease-in-out;
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-drawer.active { transform: translateX(0); }
+
+    .cart-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cart-body { flex: 1; overflow-y: auto; padding: 20px; }
+    .cart-footer { padding: 20px; border-top: 1px solid var(--border-color); background: var(--bg-card); }
+    .checkout-btn {
+      width: 100%;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    /* CART ITEM STYLING */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .cart-item-icon { font-size: 28px; width: 40px; text-align: center; }
+    .cart-item-info { flex: 1; }
+    .cart-item-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .cart-item-price { font-size: 13px; color: var(--primary); font-weight: 700; }
+    .cart-item-qty { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .qty-btn { background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); width: 24px; height: 24px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #10b981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: var(--shadow-md);
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body class="dark-mode">
+
+<div class="app-shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">🐾</div>
+      <div>PetCare <span style="font-size: 12px; color: #a855f7; display: block; font-weight: 600;">STUDIO</span></div>
+    </div>
+
+    <div class="nav-group-label">ĐIỀU HƯỚNG CỬA HÀNG</div>
+    <button class="nav-btn" id="btn-store" onclick="switchTab('store')">
+      🛒 Cửa hàng bán hàng <span class="badge">HOT</span>
+    </button>
+    <button class="nav-btn" id="btn-dashboard" onclick="switchTab('dashboard')">
+      📊 Dashboard Tổng quan
+    </button>
+
+    <div class="nav-group-label">QUẢN LÝ DỮ LIỆU</div>
+    <button class="nav-btn" id="btn-pets" onclick="switchTab('pets')">🐶 Thú cưng</button>
+    <button class="nav-btn" id="btn-customers" onclick="switchTab('customers')">👤 Khách hàng</button>
+    <button class="nav-btn" id="btn-services" onclick="switchTab('services')">✂ Dịch vụ Spa</button>
+    <button class="nav-btn active" id="btn-products" onclick="switchTab('products')">📦 Thức ăn / Đồ chơi</button>
+    <button class="nav-btn" id="btn-appointments" onclick="switchTab('appointments')">📅 Lịch hẹn</button>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="breadcrumb-tabs">
+        <span class="tab-link" id="linkStore" onclick="switchTab('store')">Cửa hàng</span>
+        <span class="tab-divider">/</span>
+        <span class="tab-link" id="linkDashboard" onclick="switchTab('dashboard')">Tổng quan</span>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn" onclick="toggleTheme()" title="Đổi chế độ Sáng/Tối">
+          <span id="themeIcon">☀️</span>
+        </button>
+        <button class="icon-btn" onclick="toggleCart()" title="Giỏ hàng">
+          🛒 <span class="cart-count" id="cartBadge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-body">
+      <!-- VIEW 1: CỬA HÀNG -->
+      <section id="view-store" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1>Cửa hàng Bán hàng & Dịch vụ 🛍</h1>
+            <p>Chọn và thêm các mặt hàng, gói chăm sóc thú cưng vào giỏ hàng dễ dàng.</p>
+          </div>
+        </div>
+
+        <div class="store-filters">
+          <button class="filter-btn active" onclick="filterProducts('all', this)">Tất cả sản phẩm</button>
+          <button class="filter-btn" onclick="filterProducts('food', this)">Thức ăn & Pate</button>
+          <button class="filter-btn" onclick="filterProducts('toy', this)">Đồ chơi & Phụ kiện</button>
+          <button class="filter-btn" onclick="filterProducts('spa', this)">Dịch vụ Spa & Tắm</button>
+          <button class="filter-btn" onclick="filterProducts('pet', this)">Thú cưng đang bán</button>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+      </section>
+
+      <!-- VIEW 2: TỔNG QUAN -->
+      <section id="view-dashboard" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1 id="timeGreeting">Xin chào! ✦</h1>
+            <p>Thống kê chi tiết tình hình kinh doanh và dịch vụ trong ngày.</p>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Doanh thu tháng này</div>
+            <div class="stat-value">48.650.000 ₫</div>
+            <div class="stat-sub">↗ +12,8% so với tháng trước</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Thú cưng hiện có</div>
+            <div class="stat-value" id="statPetCount">2 bé</div>
+            <div class="stat-sub">Đã cập nhật tiêm phòng</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Lịch hẹn hôm nay</div>
+            <div class="stat-value" id="statAppCount">2 lịch</div>
+            <div class="stat-sub">Đã cập nhật mới nhất</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 3: QUẢN LÝ THÚ CƯNG -->
+      <section id="view-pets" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1>Quản lý Thú Cưng 🐶🐱🐹</h1>
+            <p>Nhập thêm thông tin các bé thú cưng vào danh sách bán hoặc chăm sóc.</p>
+          </div>
+        </div>
+
+        <div class="add-form-panel">
+          <h3>➕ Nhập Thêm Thú Cưng Mới</h3>
+          <form onsubmit="addNewPet(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Loài thú cưng</label>
+                <select id="petType" class="form-select" required>
+                  <option value="Chó">🐶 Chó</option>
+                  <option value="Mèo">🐱 Mèo</option>
+                  <option value="Hamster">🐹 Hamster</option>
+                  <option value="Thỏ">🐰 Thỏ</option>
+                  <option value="Chim">🦜 Chim</option>
+                  <option value="Khác">🐾 Khác</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Tên / Giống thú cưng</label>
+                <input type="text" id="petName" class="form-input" placeholder="VD: Poodle Nâu Đỏ" required>
+              </div>
+              <div class="form-group">
+                <label>Độ tuổi</label>
+                <input type="text" id="petAge" class="form-input" placeholder="VD: 2 tháng" required>
+              </div>
+              <div class="form-group">
+                <label>Giá bán (VNĐ)</label>
+                <input type="number" id="petPrice" class="form-input" placeholder="VD: 4500000" required>
+              </div>
+              <div class="form-group">
+                <label>Tình trạng vắc-xin</label>
+                <input type="text" id="petVaccine" class="form-input" placeholder="VD: Đã tiêm 2 mũi" required>
+              </div>
+              <button type="submit" class="btn-submit">+ Thêm Thú Cưng</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Loài</th>
+                <th>Tên / Giống</th>
+                <th>Độ tuổi</th>
+                <th>Giá bán</th>
+                <th>Tiêm phòng</th>
+              </tr>
+            </thead>
+            <tbody id="petTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 4: KHÁCH HÀNG -->
+      <section id="view-customers" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1>Quản lý Khách Hàng 👤</h1>
+            <p>Thêm khách hàng mới và quản lý thông tin liên hệ.</p>
+          </div>
+        </div>
+
+        <div class="add-form-panel">
+          <h3>➕ Thêm Khách Hàng Mới</h3>
+          <form onsubmit="addNewCustomer(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" id="custName" class="form-input" placeholder="VD: Nguyễn Văn A" required>
+              </div>
+              <div class="form-group">
+                <label>Số điện thoại</label>
+                <input type="text" id="custPhone" class="form-input" placeholder="VD: 0987.654.321" required>
+              </div>
+              <div class="form-group">
+                <label>Hạng thành viên</label>
+                <select id="custRank" class="form-select">
+                  <option value="Mới">Mới</option>
+                  <option value="Thân thiết">Thân thiết</option>
+                  <option value="VIP Gold">VIP Gold</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-submit">+ Thêm Khách Hàng</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <table class="data-table">
+            <thead>
+              <tr><th>Họ và tên</th><th>Số điện thoại</th><th>Hạng thành viên</th></tr>
+            </thead>
+            <tbody id="customerTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 5: DỊCH VỤ SPA -->
+      <section id="view-services" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1>Dịch vụ Spa & Chăm sóc ✂️</h1>
+            <p>Thêm các gói dịch vụ cắt tỉa, tắm rửa mới lên cửa hàng bán lẻ.</p>
+          </div>
+        </div>
+
+        <div class="add-form-panel">
+          <h3>➕ Tạo Gói Dịch Vụ Spa Mới</h3>
+          <form onsubmit="addNewService(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Tên dịch vụ</label>
+                <input type="text" id="serviceName" class="form-input" placeholder="VD: Gói Tắm Vệ Sinh" required>
+              </div>
+              <div class="form-group">
+                <label>Giá dịch vụ (VNĐ)</label>
+                <input type="number" id="servicePrice" class="form-input" placeholder="VD: 150000" required>
+              </div>
+              <div class="form-group">
+                <label>Mô tả dịch vụ</label>
+                <input type="text" id="serviceDesc" class="form-input" placeholder="VD: Vệ sinh tai, cắt móng, tắm sấy" required>
+              </div>
+              <button type="submit" class="btn-submit">+ Thêm Dịch Vụ</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <table class="data-table">
+            <thead>
+              <tr><th>Tên Dịch Vụ</th><th>Giá</th><th>Mô tả</th></tr>
+            </thead>
+            <tbody id="serviceTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 6: PHẦN NHẬP THỨC ĂN & ĐỒ CHƠI (CÓ CHỌN LOẠI CHI TIẾT) -->
+      <section id="view-products" class="view-section active">
+        <div class="welcome-banner">
+          <div>
+            <h1>Nhập Thức Ăn & Đồ Chơi 📦</h1>
+            <p>Chọn phân loại chính và từng loại chi tiết để đăng bán lên Cửa Hàng.</p>
+          </div>
+        </div>
+
+        <div class="add-form-panel">
+          <h3>➕ Nhập Thức Ăn / Đồ Chơi Mới</h3>
+          <form onsubmit="addNewItemProduct(event)">
+            <div class="form-grid">
+              
+              <!-- TÊN SẢN PHẨM -->
+              <div class="form-group">
+                <label>Tên sản phẩm</label>
+                <input type="text" id="itemName" class="form-input" placeholder="VD: Cần câu mèo lông vũ" required>
+              </div>
+
+              <!-- PHÂN LOẠI CHÍNH -->
+              <div class="form-group">
+                <label>Nhóm sản phẩm</label>
+                <select id="itemCat" class="form-select" onchange="updateSubCategories()" required>
+                  <option value="food">🥣 Thức ăn & Pate</option>
+                  <option value="toy" selected>🎾 Đồ chơi & Phụ kiện</option>
+                </select>
+              </div>
+
+              <!-- CHỌN LOẠI CHI TIẾT (TỰ ĐỘNG THAY ĐỔI) -->
+              <div class="form-group">
+                <label>Loại sản phẩm chi tiết</label>
+                <select id="itemSubCat" class="form-select" required>
+                  <!-- JS Render -->
+                </select>
+              </div>
+
+              <!-- GIÁ BÁN -->
+              <div class="form-group">
+                <label>Giá bán (VNĐ)</label>
+                <input type="number" id="itemPrice" class="form-input" placeholder="VD: 45000" min="0" required>
+              </div>
+
+              <!-- MÔ TẢ NGẮN -->
+              <div class="form-group full-width">
+                <label>Mô tả ngắn</label>
+                <input type="text" id="itemDesc" class="form-input" placeholder="Mô tả thành phần, công dụng..." required>
+              </div>
+
+              <div class="form-group full-width">
+                <button type="submit" class="btn-submit" style="width: 100%;">+ Đưa Lên Cửa Hàng</button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- BẢNG DANH SÁCH -->
+        <div class="panel">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <h3 style="font-size: 16px; font-weight: 700;">📋 Danh Sách Thức Ăn & Đồ Chơi Đang Bán</h3>
+            <div class="store-filters" style="margin-bottom:0;">
+              <button class="filter-btn active" onclick="filterItemTable('all', this)">Tất cả</button>
+              <button class="filter-btn" onclick="filterItemTable('food', this)">Thức ăn</button>
+              <button class="filter-btn" onclick="filterItemTable('toy', this)">Đồ chơi</button>
+            </div>
+          </div>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Sản phẩm</th>
+                <th>Nhóm</th>
+                <th>Loại chi tiết</th>
+                <th>Mô tả</th>
+                <th>Giá bán</th>
+              </tr>
+            </thead>
+            <tbody id="itemTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- VIEW 7: QUẢN LÝ LỊCH HẸN -->
+      <section id="view-appointments" class="view-section">
+        <div class="welcome-banner">
+          <div>
+            <h1>Quản lý Lịch Hẹn 📅</h1>
+            <p>Lịch đặt hẹn chăm sóc thú cưng của khách hàng (Ngày, Giờ & Trạng thái).</p>
+          </div>
+        </div>
+
+        <div class="add-form-panel">
+          <h3>➕ Đặt Lịch Hẹn Chăm Sóc Mới</h3>
+          <form onsubmit="addNewAppointment(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Ngày hẹn (dd/mm/yyyy)</label>
+                <input type="date" id="appDate" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label>Giờ hẹn</label>
+                <input type="time" id="appTime" class="form-input" required>
+              </div>
+              <div class="form-group">
+                <label>Khách hàng</label>
+                <input type="text" id="appCustomer" class="form-input" placeholder="VD: Nguyễn Văn A" required>
+              </div>
+              <div class="form-group">
+                <label>Tên Thú cưng</label>
+                <input type="text" id="appPet" class="form-input" placeholder="VD: Cún Poodle" required>
+              </div>
+              <div class="form-group">
+                <label>Dịch vụ</label>
+                <input type="text" id="appService" class="form-input" placeholder="VD: Gói Tắm Spa" required>
+              </div>
+              <div class="form-group">
+                <label>Trạng thái</label>
+                <select id="appStatus" class="form-select">
+                  <option value="Chờ dịch vụ">Chờ dịch vụ</option>
+                  <option value="Đang thực hiện">Đang thực hiện</option>
+                  <option value="Đã hoàn thành">Đã hoàn thành</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-submit">+ Đặt Lịch Hẹn</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Ngày hẹn (dd/mm/yyyy)</th>
+                <th>Giờ hẹn</th>
+                <th>Khách hàng</th>
+                <th>Thú cưng</th>
+                <th>Dịch vụ</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="appointmentTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE-OVER CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h3 style="font-weight: 800;">Giỏ hàng 🛒</h3>
+    <button style="border:none; background:none; font-size:20px; cursor:pointer;" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <p style="text-align: center; color: var(--text-muted); margin-top: 40px;">Giỏ hàng đang trống 🐾</p>
+  </div>
+  <div class="cart-footer">
+    <div style="display:flex; justify-content:space-between; margin-bottom:16px; font-weight:800; font-size:16px;">
+      <span>Tổng tiền:</span>
+      <span id="cartTotal" style="color:var(--primary);">0 ₫</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Thanh toán ngay</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Thành công!</div>
+
+<script>
+  // CÁC LOẠI CHI TIẾT
+  const subCategoryOptions = {
+    food: [
+      { id: "Hạt khô", name: "🥣 Hạt khô / Thức ăn hạt" },
+      { id: "Pate / Súp", name: "🥫 Pate / Súp thưởng" },
+      { id: "Bánh thưởng", name: "🦴 Bánh thưởng / Xương gặm" },
+      { id: "Sữa & Dinh dưỡng", name: "🥛 Sữa & Dinh dưỡng" }
+    ],
+    toy: [
+      { id: "Cần câu mèo", name: "🎣 Cần câu / Đồ chơi mèo" },
+      { id: "Đồ chơi cắn", name: "⚽ Bóng / Đồ chơi vần gặm" },
+      { id: "Bàn cào móng", name: "📦 Bàn cào móng" },
+      { id: "Đồ chơi Hamster", name: "🎡 Vòng quay / Đồ chơi nhỏ" },
+      { id: "Phụ kiện", name: "🎀 Phụ kiện & Dây dắt" }
+    ]
+  };
+
+  const petIcons = { 'Chó': '🐶', 'Mèo': '🐱', 'Hamster': '🐹', 'Thỏ': '🐰', 'Chim': '🦜', 'Khác': '🐾' };
+
+  // GLOBAL DATA SẢN PHẨM
+  let products = [
+    // 6 MÓN THỨC ĂN
+    { id: 1, name: "Thức ăn Royal Canin Kitten", category: "food", subCat: "Hạt khô", price: 380000, icon: "🥣", tag: "Thức ăn", desc: "Dành riêng cho mèo con từ 2-12 tháng tuổi." },
+    { id: 2, name: "Pate Cát Vạn Năng Premium", category: "food", subCat: "Pate / Súp", price: 35000, icon: "🥫", tag: "Pate", desc: "Giàu dinh dưỡng, bổ sung Omega 3 & Taurine." },
+    { id: 3, name: "Hạt SmartHeart Cho Chó Trưởng Thành", category: "food", subCat: "Hạt khô", price: 210000, icon: "🥩", tag: "Thức ăn", desc: "Giúp chắc khỏe xương và sáng bóng mượt lông." },
+    { id: 4, name: "Súp Thưởng Cát Cát Cho Mèo (4 gói)", category: "food", subCat: "Pate / Súp", price: 45000, icon: "🐟", tag: "Pate", desc: "Vị cá hồi thơm ngon bổ dưỡng kích thích thèm ăn." },
+    { id: 5, name: "Thức Ăn Hạt Cho Hamster SmartPet", category: "food", subCat: "Hạt khô", price: 65000, icon: "🌻", tag: "Thức ăn", desc: "Ngũ cốc tổng hợp bổ sung khoáng chất cho bé." },
+    { id: 6, name: "Xương Canxi Gặm Sạch Răng Cho Chó", category: "food", subCat: "Bánh thưởng", price: 85000, icon: "🦴", tag: "Thức ăn", desc: "Tăng cường canxi, giúp làm sạch mảng bám trên răng." },
+
+    // 6 MÓN ĐỒ CHƠI
+    { id: 7, name: "Cần câu mèo gắn lông vũ", category: "toy", subCat: "Cần câu mèo", price: 45000, icon: "🎣", tag: "Đồ chơi", desc: "Giúp mèo vận động linh hoạt và giải tỏa căng thẳng." },
+    { id: 8, name: "Bóng Cao Su Phát Tiếng Kêu Cho Cún", category: "toy", subCat: "Đồ chơi cắn", price: 30000, icon: "⚽", tag: "Đồ chơi", desc: "Chất liệu an toàn, phát ra tiếng kêu vui nhộn khi cắn." },
+    { id: 9, name: "Bàn Cào Móng Mèo Bằng Bìa Carton", category: "toy", subCat: "Bàn cào móng", price: 75000, icon: "📦", tag: "Đồ chơi", desc: "Bảo vệ sofa, mài móng sạch sẽ tiện lợi." },
+    { id: 10, name: "Vòng Quay Chạy Cho Hamster 14cm", category: "toy", subCat: "Đồ chơi Hamster", price: 55000, icon: "🎡", tag: "Đồ chơi", desc: "Chạy siêu êm không gây tiếng ồn ban đêm." },
+    { id: 11, name: "Xương Đồ Chơi Bằng Dây Thừng Tụ Lực", category: "toy", subCat: "Đồ chơi cắn", price: 40000, icon: "🧶", tag: "Đồ chơi", desc: "Thích hợp trò chơi kéo co và ngứa răng ở cún con." },
+    { id: 12, name: "Chuột Bông Chạy Cơ Lên Dây Cót", category: "toy", subCat: "Cần câu mèo", price: 35000, icon: "🐭", tag: "Đồ chơi", desc: "Chuyển động linh hoạt kích thích bản năng săn bắt." },
+
+    // DỊCH VỤ & THÚ CƯNG
+    { id: 13, name: "Gói Tắm Spa & Cắt Lông", category: "spa", subCat: "Spa", price: 250000, icon: "✂️", tag: "Dịch vụ", desc: "Vệ sinh tai, cắt móng, vắt tuyến mồ hôi và cắt tỉa." },
+    { id: 14, name: "Poodle Nâu Đỏ thuần chủng", category: "pet", subCat: "Bán thú cưng", price: 4500000, icon: "🐶", tag: "Thú cưng", desc: "2 tháng tuổi, đã tiêm 2 mũi vắc-xin." }
+  ];
+
+  let pets = [
+    { type: "Chó", name: "Poodle Nâu Đỏ", age: "2 tháng", price: 4500000, vaccine: "Đã tiêm 2 mũi" },
+    { type: "Mèo", name: "Mèo Anh Lông Ngắn", age: "3 tháng", price: 5200000, vaccine: "Đã tiêm 1 mũi" }
+  ];
+
+  let customers = [
+    { name: "Nguyễn Văn A", phone: "0987.654.321", rank: "VIP Gold" },
+    { name: "Trần Thị B", phone: "0912.345.678", rank: "Thân thiết" }
+  ];
+
+  let services = [
+    { name: "Gói Tắm Spa & Cắt Lông", price: 250000, desc: "Vệ sinh tai, cắt móng, vắt tuyến mồ hôi và cắt tỉa." },
+    { name: "Tắm Vệ Sinh Cơ Bản", price: 150000, desc: "Tắm sấy khô, chải lông và vệ sinh tai móng." }
+  ];
+
+  let appointments = [
+    { date: "2026-10-01", time: "09:30", customer: "Nguyễn Văn A", pet: "Cún Poodle", service: "Gói Tắm Spa", status: "Đang thực hiện" },
+    { date: "2026-10-01", time: "14:00", customer: "Trần Thị B", phone: "0912.345.678", pet: "Mèo ALN", service: "Tắm Vệ Sinh", status: "Chờ dịch vụ" }
+  ];
+
+  let cart = [];
+
+  // INITIALIZATION
+  window.onload = function() {
+    updateSubCategories();
+    renderProducts('all');
+    renderItemTable('all');
+    renderPets();
+    renderCustomers();
+    renderServices();
+    renderAppointments();
+    updateDashboardStats();
+    setGreeting();
+  };
+
+  // FORMAT CURRENCY
+  function formatVND(val) {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(val);
+  }
+
+  // SHOW TOAST
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.innerText = msg;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 2500);
+  }
+
+  // TAB NAVIGATION
+  function switchTab(tabId) {
+    document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(el => el.classList.remove('active'));
+
+    const targetSection = document.getElementById('view-' + tabId);
+    if (targetSection) targetSection.classList.add('active');
+
+    const navBtn = document.getElementById('btn-' + tabId);
+    if (navBtn) navBtn.classList.add('active');
+
+    if (tabId === 'store') document.getElementById('linkStore').classList.add('active');
+    if (tabId === 'dashboard') document.getElementById('linkDashboard').classList.add('active');
+  }
+
+  // THEME TOGGLE
+  function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    document.getElementById('themeIcon').innerText = isDark ? '☀️' : '🌙';
+  }
+
+  // GREETING
+  function setGreeting() {
+    const hour = new Date().getHours();
+    let text = "Xin chào ngày mới! ✦";
+    if (hour < 12) text = "Chào buổi sáng! 🌅";
+    else if (hour < 18) text = "Chào buổi chiều! ☀️";
+    else text = "Chào buổi tối! 🌙";
+    document.getElementById('timeGreeting').innerText = text;
+  }
+
+  // UPDATE SUB-CATEGORY DROPDOWN
+  function updateSubCategories() {
+    const cat = document.getElementById('itemCat').value;
+    const subSelect = document.getElementById('itemSubCat');
+    subSelect.innerHTML = '';
+    
+    if (subCategoryOptions[cat]) {
+      subCategoryOptions[cat].forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.id;
+        option.innerText = opt.name;
+        subSelect.appendChild(option);
+      });
+    }
+  }
+
+  // RENDER STORE PRODUCTS
+  function renderProducts(filterCategory) {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = '';
+
+    const filtered = filterCategory === 'all' 
+      ? products 
+      : products.filter(p => p.category === filterCategory);
+
+    filtered.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <span class="product-tag">${p.tag}</span>
+        <div class="product-image">${p.icon}</div>
+        <div class="product-title">${p.name}</div>
+        <div class="product-desc">${p.desc}</div>
+        <div class="product-bottom">
+          <div class="product-price">${formatVND(p.price)}</div>
+          <button class="add-cart-btn" onclick="addToCart(${p.id})">+ Thêm</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function filterProducts(cat, btn) {
+    document.querySelectorAll('.store-filters .filter-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    renderProducts(cat);
+  }
+
+  // RENDER ITEM MANAGEMENT TABLE
+  function renderItemTable(filterCategory) {
+    const tbody = document.getElementById('itemTableBody');
+    tbody.innerHTML = '';
+
+    const items = products.filter(p => p.category === 'food' || p.category === 'toy');
+    const filtered = filterCategory === 'all' ? items : items.filter(p => p.category === filterCategory);
+
+    filtered.forEach(p => {
+      const tr = document.createElement('tr');
+      const catLabel = p.category === 'food' ? '🥣 Thức ăn' : '🎾 Đồ chơi';
+      tr.innerHTML = `
+        <td><strong>${p.icon} ${p.name}</strong></td>
+        <td><span class="badge-sub">${catLabel}</span></td>
+        <td>${p.subCat || '-'}</td>
+        <td>${p.desc}</td>
+        <td><strong>${formatVND(p.price)}</strong></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function filterItemTable(cat, btn) {
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderItemTable(cat);
+  }
+
+  // ADD NEW PRODUCT / ITEM
+  function addNewItemProduct(e) {
+    e.preventDefault();
+    const name = document.getElementById('itemName').value;
+    const category = document.getElementById('itemCat').value;
+    const subCat = document.getElementById('itemSubCat').value;
+    const price = parseFloat(document.getElementById('itemPrice').value);
+    const desc = document.getElementById('itemDesc').value;
+
+    const iconMap = {
+      "Hạt khô": "🥣", "Pate / Súp": "🥫", "Bánh thưởng": "🦴", "Sữa & Dinh dưỡng": "🥛",
+      "Cần câu mèo": "🎣", "Đồ chơi cắn": "⚽", "Bàn cào móng": "📦", "Đồ chơi Hamster": "🎡", "Phụ kiện": "🎀"
+    };
+
+    const newProd = {
+      id: Date.now(),
+      name,
+      category,
+      subCat,
+      price,
+      desc,
+      icon: iconMap[subCat] || "📦",
+      tag: category === 'food' ? "Thức ăn" : "Đồ chơi"
+    };
+
+    products.unshift(newProd);
+    renderProducts('all');
+    renderItemTable('all');
+    e.target.reset();
+    updateSubCategories();
+    showToast("Đã thêm sản phẩm mới thành công!");
+  }
+
+  // RENDER PETS
+  function renderPets() {
+    const tbody = document.getElementById('petTableBody');
+    tbody.innerHTML = '';
+    pets.forEach(p => {
+      const tr = document.createElement('tr');
+      const icon = petIcons[p.type] || '🐾';
+      tr.innerHTML = `
+        <td>${icon} ${p.type}</td>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.age}</td>
+        <td><strong>${formatVND(p.price)}</strong></td>
+        <td><span class="badge-sub">${p.vaccine}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addNewPet(e) {
+    e.preventDefault();
+    const type = document.getElementById('petType').value;
+    const name = document.getElementById('petName').value;
+    const age = document.getElementById('petAge').value;
+    const price = parseFloat(document.getElementById('petPrice').value);
+    const vaccine = document.getElementById('petVaccine').value;
+
+    const newPet = { type, name, age, price, vaccine };
+    pets.unshift(newPet);
+
+    // Bổ sung vào cửa hàng
+    products.unshift({
+      id: Date.now(),
+      name: `${name} (${type})`,
+      category: 'pet',
+      subCat: 'Bán thú cưng',
+      price: price,
+      icon: petIcons[type] || '🐾',
+      tag: 'Thú cưng',
+      desc: `Độ tuổi: ${age}. Vắc-xin: ${vaccine}.`
+    });
+
+    renderPets();
+    renderProducts('all');
+    updateDashboardStats();
+    e.target.reset();
+    showToast("Đã thêm thú cưng thành công!");
+  }
+
+  // RENDER CUSTOMERS
+  function renderCustomers() {
+    const tbody = document.getElementById('customerTableBody');
+    tbody.innerHTML = '';
+    customers.forEach(c => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${c.name}</strong></td>
+        <td>${c.phone}</td>
+        <td><span class="badge-sub">${c.rank}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addNewCustomer(e) {
+    e.preventDefault();
+    const name = document.getElementById('custName').value;
+    const phone = document.getElementById('custPhone').value;
+    const rank = document.getElementById('custRank').value;
+
+    customers.unshift({ name, phone, rank });
+    renderCustomers();
+    e.target.reset();
+    showToast("Đã thêm khách hàng thành công!");
+  }
+
+  // RENDER SERVICES
+  function renderServices() {
+    const tbody = document.getElementById('serviceTableBody');
+    tbody.innerHTML = '';
+    services.forEach(s => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>✂️ ${s.name}</strong></td>
+        <td><strong>${formatVND(s.price)}</strong></td>
+        <td>${s.desc}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addNewService(e) {
+    e.preventDefault();
+    const name = document.getElementById('serviceName').value;
+    const price = parseFloat(document.getElementById('servicePrice').value);
+    const desc = document.getElementById('serviceDesc').value;
+
+    services.unshift({ name, price, desc });
+
+    products.unshift({
+      id: Date.now(),
+      name,
+      category: 'spa',
+      subCat: 'Spa',
+      price,
+      icon: '✂️',
+      tag: 'Dịch vụ',
+      desc
+    });
+
+    renderServices();
+    renderProducts('all');
+    e.target.reset();
+    showToast("Đã thêm dịch vụ Spa mới!");
+  }
+
+  // RENDER APPOINTMENTS
+  function renderAppointments() {
+    const tbody = document.getElementById('appointmentTableBody');
+    tbody.innerHTML = '';
+    appointments.forEach(a => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${a.date}</td>
+        <td><strong>${a.time}</strong></td>
+        <td>${a.customer}</td>
+        <td>${a.pet}</td>
+        <td>${a.service}</td>
+        <td><span class="badge-sub">${a.status}</span></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function addNewAppointment(e) {
+    e.preventDefault();
+    const date = document.getElementById('appDate').value;
+    const time = document.getElementById('appTime').value;
+    const customer = document.getElementById('appCustomer').value;
+    const pet = document.getElementById('appPet').value;
+    const service = document.getElementById('appService').value;
+    const status = document.getElementById('appStatus').value;
+
+    appointments.unshift({ date, time, customer, pet, service, status });
+    renderAppointments();
+    updateDashboardStats();
+    e.target.reset();
+    showToast("Đã tạo lịch hẹn thành công!");
+  }
+
+  // DASHBOARD STATS
+  function updateDashboardStats() {
+    document.getElementById('statPetCount').innerText = `${pets.length} bé`;
+    document.getElementById('statAppCount').innerText = `${appointments.length} lịch`;
+  }
+
+  // CART SYSTEM
+  function toggleCart() {
+    document.getElementById('cartDrawer').classList.toggle('active');
+    document.getElementById('cartOverlay').classList.toggle('active');
+  }
+
+  function addToCart(productId) {
+    const prod = products.find(p => p.id === productId);
+    if (!prod) return;
+
+    const existing = cart.find(item => item.id === productId);
+    if (existing) {
+      existing.qty++;
+    } else {
+      cart.push({ ...prod, qty: 1 });
+    }
+
+    updateCartUI();
+    showToast(`Đã thêm "${prod.name}" vào giỏ!`);
+  }
+
+  function changeQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+
+    item.qty += delta;
+    if (item.qty <= 0) {
+      cart = cart.filter(i => i.id !== id);
+    }
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const cartBody = document.getElementById('cartBody');
+    const cartBadge = document.getElementById('cartBadge');
+    const cartTotal = document.getElementById('cartTotal');
+
+    const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    cartBadge.innerText = totalCount;
+    cartTotal.innerText = formatVND(totalPrice);
+
+    if (cart.length === 0) {
+      cartBody.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 40px;">Giỏ hàng đang trống 🐾</p>';
+      return;
+    }
+
+    cartBody.innerHTML = '';
+    cart.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div class="cart-item-icon">${item.icon}</div>
+        <div class="cart-item-info">
+          <div class="cart-item-title">${item.name}</div>
+          <div class="cart-item-price">${formatVND(item.price)}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+            <span style="font-size:13px; font-weight:700;">${item.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
+          </div>
+        </div>
+      `;
+      cartBody.appendChild(div);
+    });
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Giỏ hàng của bạn đang trống!");
+      return;
+    }
+    alert("Thanh toán thành công! Cảm ơn bạn đã ủng hộ PetCare Studio 🐾");
+    cart = [];
+    updateCartUI();
+    toggleCart();
+  }
+</script>
+</body>
+</html>
