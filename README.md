@@ -1,5 +1,3 @@
-# PetCare Studio — Hệ thống quản lý cửa hàng thú cưng
-
 Ứng dụng mẫu phục vụ đồ án triển khai hệ thống web bằng Docker Compose. Giao diện tiếng Việt gồm quản lý thú cưng và giá bán, khách hàng/sở thích/ngân sách, dịch vụ spa, lịch hẹn và nhật ký chăm sóc. Dữ liệu lưu PostgreSQL; pgAdmin quản trị DB; Nginx reverse proxy; Prometheus + Grafana giám sát metrics; Loki + Promtail thu thập log Nginx.
 
 > Đây là bộ khung đồ án/demo. Trước khi đưa lên Internet cần bổ sung đăng nhập/ phân quyền, kiểm thử bảo mật, backup, tên miền và chứng chỉ TLS hợp lệ. Dữ liệu mẫu và giá chỉ nhằm minh họa, hãy điều chỉnh theo cửa hàng thực tế.
