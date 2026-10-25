@@ -1,6 +1,4 @@
-/* ==========================================================
-   1. CẤU HÌNH BIẾN CHUNG & CHỦ ĐỀ (LIGHT / DARK)
-   ========================================================== */
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -41,10 +39,6 @@ body {
   font-size: 13px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* ==========================================================
-   2. BỐ CỤC SHELL, SIDEBAR & TOPBAR
-   ========================================================== */
 .app-shell {
   display: flex;
   min-height: 100vh;
@@ -294,9 +288,6 @@ body {
   flex: 1;
 }
 
-/* ==========================================================
-   3. BẢNG ĐIỀU KHIỂN DASHBOARD & CÁC THẺ CARD
-   ========================================================== */
 .welcome-row {
   display: flex;
   justify-content: space-between;
@@ -537,10 +528,6 @@ body {
   font-weight: 800;
   margin-bottom: 4px;
 }
-
-/* ==========================================================
-   4. BẢNG DỮ LIỆU & BỘ LỌC
-   ========================================================== */
 .table-actions {
   display: flex;
   gap: 10px;
@@ -601,10 +588,6 @@ td {
   font-size: 11px;
   margin-right: 4px;
 }
-
-/* ==========================================================
-   5. CART DRAWER (GIỎ HÀNG SIDEBAR CÓ CHECKBOX)
-   ========================================================== */
 .cart-drawer {
   position: fixed;
   top: 0;

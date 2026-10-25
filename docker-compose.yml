@@ -1,3 +1,4 @@
+
 services:
   app:
     build: ./app
@@ -137,4 +138,3 @@ volumes:
   grafanadata: {}
   lokidata: {}
   nginxlogs: {}
-  
