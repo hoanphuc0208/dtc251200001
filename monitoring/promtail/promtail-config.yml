@@ -9,27 +9,10 @@ clients:
   - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-  # 1. Thu thập và parse Access Log của Nginx
-  - job_name: nginx-access
+  - job_name: containers
     static_configs:
-      - targets: [localhost]
+      - targets:
+          - localhost
         labels:
-          job: nginx
-          log_type: access
-          __path__: /var/log/nginx/access.log
-    # Pipeline giúp bóc tách mã HTTP Status, IP, Method để truy vấn LogQL dễ hơn
-    pipeline_stages:
-      - regex:
-          expression: '^(?P<remote_addr>[\w\.]+) - (?P<remote_user>[^ ]*) \[(?P<time_local>.*)\] "(?P<method>\w+) (?P<request_path>[^ ]*) (?P<protocol>[^"]*)" (?P<status>\d+) (?P<body_bytes_sent>\d+)'
-      - labels:
-          method:
-          status:
-
-  # 2. Thu thập Error Log của Nginx
-  - job_name: nginx-error
-    static_configs:
-      - targets: [localhost]
-        labels:
-          job: nginx-error
-          log_type: error
-          __path__: /var/log/nginx/error.log
+          job: containerlogs
+          __path__: /var/lib/docker/containers/*/*.log
